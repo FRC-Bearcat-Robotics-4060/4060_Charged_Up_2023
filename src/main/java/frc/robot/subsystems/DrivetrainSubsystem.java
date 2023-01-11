@@ -101,7 +101,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Similar helpers also exist for Mk4 modules using the Mk4SwerveModuleHelper class.
 
     Mk4ModuleConfiguration module_config = new Mk4ModuleConfiguration();
-    module_config.setDriveCurrentLimit(20.0);
+    module_config.setDriveCurrentLimit(30.0);
     module_config.setSteerCurrentLimit(20.0);
 
     // By default we will use Falcon 500s in standard configuration. But if you use a different configuration or motors
