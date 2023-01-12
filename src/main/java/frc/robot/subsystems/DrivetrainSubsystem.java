@@ -10,18 +10,28 @@ import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.PhotonCameraWrapper;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj.SPI;
 
 import static frc.robot.Constants.*;
+
+import edu.wpi.first.math.Pair;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /**
@@ -53,6 +63,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
           Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
+          private final Translation2d m_frontLeftLocation = new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+          private final Translation2d m_frontRightLocation = new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0);
+          private final Translation2d m_backLeftLocation = new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+          private final Translation2d m_backRightLocation = new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0);
+
+        // Creating my kinematics object using the module locations
+        private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+                m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
+        );
+
+        /*
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
           // Front left
           new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
@@ -63,6 +84,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
           // Back right
           new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0)
   );
+ */
+
 
   // By default we use a Pigeon for our gyroscope. But if you use another gyroscope, like a NavX, you can change this.
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
@@ -71,6 +94,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
 //   private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
   // FIXME Uncomment if you are using a NavX
  private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+
+
+ public PhotonCameraWrapper pcw;
+ private SwerveDrivePoseEstimator m_poseEstimator;
+ private final Field2d m_fieldSim = new Field2d();
+
+     /*
+    * Here we use DifferentialDrivePoseEstimator so that we can fuse odometry
+    * readings. The
+    * numbers used below are robot specific, and should be tuned.
+    */
+    
+
+
 
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
@@ -83,6 +120,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
+    
+
+    
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
     //
@@ -160,7 +200,34 @@ public class DrivetrainSubsystem extends SubsystemBase {
             BACK_RIGHT_MODULE_STEER_ENCODER,
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
+
+        pcw = new PhotonCameraWrapper();
+        SmartDashboard.putData("Field", m_fieldSim);
+    
+        /* 
+        TODO: com.swervedrivespecialties.swervelib.SwerveModule does not implement getPosition(), returning a SwerveModulePosition
+
+        */
+        // This is required to get odometry for a wheel
+        // Attempting to 
+        
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+        SwerveModulePosition flp = new SwerveModulePosition(states[0].speedMetersPerSecond, states[0].angle);
+        SwerveModulePosition frp = new SwerveModulePosition(states[1].speedMetersPerSecond, states[1].angle);
+        SwerveModulePosition blp = new SwerveModulePosition(states[2].speedMetersPerSecond, states[2].angle);
+        SwerveModulePosition brp = new SwerveModulePosition(states[3].speedMetersPerSecond, states[3].angle);
+        SwerveModulePosition[] smp = new SwerveModulePosition[] {flp,frp,blp,brp};
+
+        SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
+        m_kinematics, m_navx.getRotation2d(), smp, new Pose2d(5.0, 13.5, new Rotation2d()));
+
+        m_poseEstimator =
+        new SwerveDrivePoseEstimator(m_kinematics, m_navx.getRotation2d(), smp, new Pose2d());
+
   }
+
+
+
 
   /**
    * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
@@ -201,5 +268,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
     m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+
+    // TODO: how to get actual distances traveled for each wheel?
+    SwerveModulePosition flp = new SwerveModulePosition(states[0].speedMetersPerSecond, states[0].angle);
+    SwerveModulePosition frp = new SwerveModulePosition(states[1].speedMetersPerSecond, states[1].angle);
+    SwerveModulePosition blp = new SwerveModulePosition(states[2].speedMetersPerSecond, states[2].angle);
+    SwerveModulePosition brp = new SwerveModulePosition(states[3].speedMetersPerSecond, states[3].angle);
+    SwerveModulePosition[] smp = new SwerveModulePosition[] {flp,frp,blp,brp};
+    m_poseEstimator.update(m_navx.getRotation2d(), smp);
+
+    Pair<Pose2d, Double> result =
+    pcw.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+    var camPose = result.getFirst();
+    var camPoseObsTime = result.getSecond();
+    if (camPose != null) {
+        m_poseEstimator.addVisionMeasurement(camPose, camPoseObsTime);
+        m_fieldSim.getObject("Cam Est Pos").setPose(camPose);
+    } else {
+        // move it way off the screen to make it disappear
+        m_fieldSim.getObject("Cam Est Pos").setPose(new Pose2d(-100, -100, new Rotation2d()));
+    }
+    
+    //m_fieldSim.getObject("Actual Pos").setPose(m_drivetrainSimulator.getPose());
+    m_fieldSim.setRobotPose(m_poseEstimator.getEstimatedPosition());
   }
+
+  
 }
