@@ -8,12 +8,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -126,7 +122,7 @@ public class Robot extends TimedRobot {
       // Field2d expects 0,0 coordinates at the bottom left, from the judging table's perspective
       double posX = bp[0] + Constants.FieldConstants.length / 2;
       double posY = bp[1] + Constants.FieldConstants.width / 2;
-      Pose2d botPose2d = new Pose2d(new Translation2d(posX, posY), new Rotation2d().fromDegrees(bp[5]));
+      Pose2d botPose2d = new Pose2d(new Translation2d(posX, posY), Rotation2d.fromDegrees(bp[5]));
       m_fieldSim.setRobotPose(botPose2d);
 
       // The latest field image available in ShuffleBoard is from 2022, however it may be possible to insert one into the JAR:
