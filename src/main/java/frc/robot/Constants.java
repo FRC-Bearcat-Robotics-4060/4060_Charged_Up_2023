@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -47,4 +49,9 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6; // Set back right steer motor ID
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10; // Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(28.5); // FIXME Measure and set back right steer offset
+
+    static class FieldConstants {
+        static final double length = Units.feetToMeters(54);
+        static final double width = Units.feetToMeters(27);
+    }
 }
