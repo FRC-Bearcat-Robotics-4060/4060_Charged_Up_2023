@@ -4,9 +4,20 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +30,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+    // Limelight vision based pose estimation from AprilTags      
+    private final Field2d m_fieldSim = new Field2d();
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -27,7 +41,11 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+
     m_robotContainer = new RobotContainer();
+
+    CameraServer.startAutomaticCapture(new HttpCamera("limelight", "http://10.40.60.11:5800/stream.mjpg", HttpCameraKind.kMJPGStreamer));
+    SmartDashboard.putData("Field", m_fieldSim);
   }
 
   /**
@@ -44,6 +62,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    UpdateBotPose();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -92,4 +111,23 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+
+  private void UpdateBotPose() {
+    Double[] defaultPos = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0};
+    Double[] bp = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(defaultPos);
+    if (bp.length > 0){
+      //bp: [0:TX, 1:TY, 2:TZ, 3:RX, 4:RY, 5:RZ]
+      // Coordinates are 0,0 at the center of the field, and are in meters.
+      // Field2d expects 0,0 coordinates at the bottom left, from the judging table's perspective
+      double posX = bp[0] + Constants.FieldConstants.length / 2;
+      double posY = bp[1] + Constants.FieldConstants.width / 2;
+      Pose2d botPose2d = new Pose2d(new Translation2d(posX, posY), Rotation2d.fromDegrees(bp[5]));
+      m_fieldSim.setRobotPose(botPose2d);
+
+      // The latest field image available in ShuffleBoard is from 2022, however it may be possible to insert one into the JAR:
+      // Shuffleboard-2023.1.1-winx64\edu\wpi\first\shuffleboard\plugin\base\widget\field
+    }
+  }
 }
+
