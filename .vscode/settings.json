@@ -25,5 +25,8 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "java.format.settings.url": "eclipse-java-google-style.xml",
+  "java.format.settings.profile": "GoogleStyle",
+  "editor.detectIndentation": false
 }
