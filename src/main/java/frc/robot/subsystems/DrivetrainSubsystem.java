@@ -78,7 +78,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // counter-clockwise should
     // cause the angle reading to increase until it wraps back over to zero.
 
-    // Remove if you are using a Pigeon
+    // Uncomment if you are using a Pigeon
     // private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
 
     // Uncomment if you are using a NavX
