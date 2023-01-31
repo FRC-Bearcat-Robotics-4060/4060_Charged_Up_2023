@@ -44,8 +44,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * This is a measure of how fast the robot should be able to drive in a straight line.
      */
     public static final double MAX_VELOCITY_METERS_PER_SECOND =
-            6380.0 / 60.0 * SdsModuleConfigurations.MK3_STANDARD.getDriveReduction()
-                    * SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+            6380.0 / 60.0 * SdsModuleConfigurations.MK4I_L2.getDriveReduction()
+                    * SdsModuleConfigurations.MK4I_L2.getWheelDiameter() * Math.PI;
+
     /**
      * The maximum angular velocity of the robot in radians per second.
      * <p>
@@ -76,9 +77,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // The important thing about how you configure your gyroscope is that rotating the robot
     // counter-clockwise should
     // cause the angle reading to increase until it wraps back over to zero.
-    // FIXME Remove if you are using a Pigeon
+
+    // Uncomment if you are using a Pigeon
     // private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
-    // FIXME Uncomment if you are using a NavX
+
+    // Uncomment if you are using a NavX
     private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
     // These are our modules. We initialize them in the constructor.
