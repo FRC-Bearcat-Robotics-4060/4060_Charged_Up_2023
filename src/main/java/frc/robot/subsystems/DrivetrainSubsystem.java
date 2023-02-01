@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,6 +23,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 
 import static frc.robot.Constants.*;
+import java.util.Arrays;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class DrivetrainSubsystem extends SubsystemBase {
     /**
@@ -92,6 +96,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private final SwerveModule m_frontRightModule;
     private final SwerveModule m_backLeftModule;
     private final SwerveModule m_backRightModule;
+    private final SwerveModule[] swerveModules;
 
     private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
@@ -161,6 +166,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
                 .withSteerEncoderPort(BACK_RIGHT_MODULE_STEER_ENCODER)
                 .withSteerOffset(BACK_RIGHT_MODULE_STEER_OFFSET).build();
+
+        swerveModules = new SwerveModule[] {m_frontLeftModule, m_frontRightModule, m_backLeftModule, m_backRightModule};
     }
 
     /**
@@ -189,7 +196,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // counter-clockwise makes the angle increase.
         return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
     }
-
+    public SwerveModulePosition[] getModulePositions() {
+        return Arrays.stream(swerveModules).map(module -> module.getPosition()).toArray(SwerveModulePosition[]::new);
+    }
     public void drive(ChassisSpeeds chassisSpeeds) {
         m_chassisSpeeds = chassisSpeeds;
     }
