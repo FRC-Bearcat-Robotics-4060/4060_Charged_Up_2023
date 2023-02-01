@@ -43,8 +43,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * <p>
      * This is a measure of how fast the robot should be able to drive in a straight line.
      */
+    public static final double NEO_FREE_RPM = 5676.0;
+    public static final double FALCON500_FREE_RPM = 6380.0;
+
     public static final double MAX_VELOCITY_METERS_PER_SECOND =
-            6380.0 / 60.0 * SdsModuleConfigurations.MK4I_L2.getDriveReduction()
+            NEO_FREE_RPM / 60.0 * SdsModuleConfigurations.MK4I_L2.getDriveReduction()
                     * SdsModuleConfigurations.MK4I_L2.getWheelDiameter() * Math.PI;
 
     /**
@@ -117,6 +120,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         MkModuleConfiguration module_config = new MkModuleConfiguration();
         module_config.setDriveCurrentLimit(30.0);
         module_config.setSteerCurrentLimit(20.0);
+        module_config.setSteerPID(1.0, 0.0, 0.1); // From getDefaultSteerNEO
 
         // By default we will use Falcon 500s in standard configuration. But if you use a
         // different configuration or motors
