@@ -8,7 +8,9 @@ import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -54,9 +56,20 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6;
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10;
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(27.2);
+    
+    public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
+        // Front left
+        new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        // Front right
+        new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        // Back left
+        new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        // Back right
+        new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0)
+    );
 
-    static class FieldConstants {
-        static final double length = Units.feetToMeters(54);
-        static final double width = Units.feetToMeters(27);
+    public static class FieldConstants {
+        public static final double length = Units.feetToMeters(54);
+        public static final double width = Units.feetToMeters(27);
     }
 }
