@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
-import org.photonvision.PhotonCamera;
+//import org.photonvision.PhotonCamera;
 
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -33,8 +33,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.VisionCamera;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.CamType;
+//import frc.robot.subsystems.DrivetrainSubsystem;
+//import frc.robot.CamType;
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
 
