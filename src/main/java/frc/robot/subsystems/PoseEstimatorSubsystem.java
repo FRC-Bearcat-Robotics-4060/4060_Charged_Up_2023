@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
-//import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonCamera;
 
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -32,7 +32,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.VisionCamera;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.CamType;
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
 
@@ -65,6 +67,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private double previousPipelineTimestamp = 0;
 
   public PoseEstimatorSubsystem( DrivetrainSubsystem drivetrainSubsystem) { //PhotonCamera photonCamera,
+
+
     //this.photonCamera = photonCamera;
     this.drivetrainSubsystem = drivetrainSubsystem;
     AprilTagFieldLayout layout;
@@ -93,61 +97,61 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
   }
 
-  /* 
+  
   @Override
   public void periodic() {
-    // Update pose estimator with the best visible target
-    var pipelineResult = photonCamera.getLatestResult();
-    var resultTimestamp = pipelineResult.getTimestampSeconds();
-    if (resultTimestamp != previousPipelineTimestamp && pipelineResult.hasTargets()) {
-      previousPipelineTimestamp = resultTimestamp;
-      var target = pipelineResult.getBestTarget();
-      var fiducialId = target.getFiducialId();
-      // Get the tag pose from field layout - consider that the layout will be null if it failed to load
-      Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
-      if (target.getPoseAmbiguity() <= .2 && fiducialId >= 0 && tagPose.isPresent()) {
-        var targetPose = tagPose.get();
-        Transform3d camToTarget = target.getBestCameraToTarget();
-        Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
-        var visionMeasurement = camPose.transformBy(Constants.VisionConstants.CAMERA_TO_ROBOT);
-        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
-      }
+    for (VisionCamera cam : Constants.VisionCameras){
+        switch (cam.Type){
+            case PhotonVision:
+
+                // Update pose estimator with the best visible target
+                var pipelineResult = cam.pvCam.getLatestResult();
+                var resultTimestamp = pipelineResult.getTimestampSeconds();
+                if (resultTimestamp != previousPipelineTimestamp && pipelineResult.hasTargets()) {
+                    previousPipelineTimestamp = resultTimestamp;
+                    var target = pipelineResult.getBestTarget();
+                    var fiducialId = target.getFiducialId();
+                    // Get the tag pose from field layout - consider that the layout will be null if it failed to load
+                    Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
+                    if (target.getPoseAmbiguity() <= .2 && fiducialId >= 0 && tagPose.isPresent()) {
+                        var targetPose = tagPose.get();
+                        Transform3d camToTarget = target.getBestCameraToTarget();
+                        Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
+                        var visionMeasurement = camPose.transformBy(cam.CameraToRobot);
+                        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
+                    }
+                }
+                break;
+
+            case LimeLight:
+                Date date = new Date();
+                double timestamp = date.getTime();
+                Double[] defaultPos = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0};
+                Double[] bp = NetworkTableInstance.getDefault().getTable(cam.NetworkTable).getEntry("botpose").getDoubleArray(defaultPos);
+                if (bp.length > 0){
+                    //bp: [0:TX, 1:TY, 2:TZ, 3:RX, 4:RY, 5:RZ]
+                    // Coordinates are 0,0 at the center of the field, and are in meters.
+                    // Field2d expects 0,0 coordinates at the bottom left, from the judging table's perspective
+                double posX = bp[0] + Constants.FieldConstants.length / 2;
+                double posY = bp[1] + Constants.FieldConstants.width / 2;
+                Pose2d botPose2d = new Pose2d(new Translation2d(posX, posY), Rotation2d.fromDegrees(bp[5]));
+                
+                poseEstimator.addVisionMeasurement(botPose2d, timestamp);
+                }
+            default:
+                break;
+            
+        }
     }
+
+    
     // Update pose estimator with drivetrain sensors
     poseEstimator.update(
       drivetrainSubsystem.getGyroscopeRotation(),
       drivetrainSubsystem.getModulePositions());
 
     field2d.setRobotPose(getCurrentPose());
-  }
-*/
-@Override
-  public void periodic() {
-    Date date = new Date();
-    double timestamp = date.getTime();
-    Double[] defaultPos = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0};
-    Double[] bp = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(defaultPos);
-    if (bp.length > 0){
-        //bp: [0:TX, 1:TY, 2:TZ, 3:RX, 4:RY, 5:RZ]
-        // Coordinates are 0,0 at the center of the field, and are in meters.
-        // Field2d expects 0,0 coordinates at the bottom left, from the judging table's perspective
-      double posX = bp[0] + Constants.FieldConstants.length / 2;
-      double posY = bp[1] + Constants.FieldConstants.width / 2;
-      Pose2d botPose2d = new Pose2d(new Translation2d(posX, posY), Rotation2d.fromDegrees(bp[5]));
-    
-      poseEstimator.addVisionMeasurement(botPose2d, timestamp);
-    }
-
-
-    // Update pose estimator with drivetrain sensors
-    poseEstimator.update(
-        drivetrainSubsystem.getGyroscopeRotation(),
-        drivetrainSubsystem.getModulePositions()
-    );
-
-    field2d.setRobotPose(getCurrentPose());
-
   }
 
 
