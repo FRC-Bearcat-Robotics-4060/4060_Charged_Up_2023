@@ -5,12 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
-
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
-
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+//import edu.wpi.first.math.util.Units;
+import org.photonvision.PhotonCamera;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -54,9 +55,37 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6;
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10;
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(27.2);
+    
+    public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
+        // Front left
+        new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        // Front right
+        new Translation2d(DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        // Back left
+        new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, DRIVETRAIN_TRACKWIDTH_METERS / 2.0),
+        // Back right
+        new Translation2d(-DRIVETRAIN_WHEELBASE_METERS / 2.0, -DRIVETRAIN_TRACKWIDTH_METERS / 2.0)
+    );
 
-    static class FieldConstants {
-        static final double length = Units.feetToMeters(54);
-        static final double width = Units.feetToMeters(27);
+    public static class FieldConstants {
+        public static final double length = Units.feetToMeters(54);
+        public static final double width = Units.feetToMeters(27);
     }
+
+    public static VisionCamera[] VisionCameras = new VisionCamera[] {
+        new VisionCamera(
+            CamType.LimeLight, 
+            "Limelight", 
+            "limelight", 
+            new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d()),
+            null
+        ),
+        new VisionCamera(
+            CamType.PhotonVision, 
+            "PV1", 
+            "pv1_onboard", 
+            new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d()),
+            new PhotonCamera("pv1_onboard")
+        )
+    };
 }

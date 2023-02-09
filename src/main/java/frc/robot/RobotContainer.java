@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -24,7 +24,7 @@ public class RobotContainer {
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
     private final XboxController m_controller = new XboxController(0);
-
+    private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -35,6 +35,7 @@ public class RobotContainer {
         // Left stick X axis -> left and right movement
         // Right stick X axis -> rotation
         m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(m_drivetrainSubsystem,
+                () -> poseEstimator.getCurrentPose().getRotation(),
                 () -> -modifyAxis(m_controller.getLeftY())
                         * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                 () -> -modifyAxis(m_controller.getLeftX())
