@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 //import org.photonvision.PhotonCamera;
 
@@ -30,13 +31,14 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.VisionCamera;
 //import frc.robot.subsystems.DrivetrainSubsystem;
 //import frc.robot.CamType;
 
-public class PoseEstimatorSubsystem extends SubsystemBase {
+public class PoseEstimatorSubsystem extends SubsystemBase implements Supplier<Pose2d> {
 
   //private final PhotonCamera photonCamera;
   private final DrivetrainSubsystem drivetrainSubsystem;
@@ -74,9 +76,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     AprilTagFieldLayout layout;
     try {
       layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      /* \
+      //2023 uses an absolute coordinate system, so this has a 50% chance of rotating all coordinates 180deg!
       var alliance = DriverStation.getAlliance();
       layout.setOrigin(alliance == Alliance.Blue ?
           OriginPosition.kBlueAllianceWallRightSide : OriginPosition.kRedAllianceWallRightSide);
+          */
     } catch(IOException e) {
       DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
       layout = null;
@@ -119,6 +124,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                         Transform3d camToTarget = target.getBestCameraToTarget();
                         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
                         var visionMeasurement = camPose.transformBy(cam.CameraToRobot);
+                        //SmartDashboard.putString(String.valueOf(fiducialId), String.valueOf(resultTimestamp));
                         poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
                     }
                 }
@@ -163,6 +169,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         pose.getRotation().getDegrees());
   }
 
+
+
   public Pose2d getCurrentPose() {
     return poseEstimator.getEstimatedPosition();
   }
@@ -187,5 +195,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   public void resetFieldPosition() {
     setCurrentPose(new Pose2d());
   }
+
+
+    @Override
+    public Pose2d get() {
+        return poseEstimator.getEstimatedPosition();
+    }
 
 }

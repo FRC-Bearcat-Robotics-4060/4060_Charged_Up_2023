@@ -44,9 +44,10 @@ public class Robot extends TimedRobot {
 
         m_robotContainer = new RobotContainer();
 
-        CameraServer.startAutomaticCapture(new HttpCamera("limelight",
-                "http://10.40.60.11:5800/stream.mjpg", HttpCameraKind.kMJPGStreamer));
-        SmartDashboard.putData("Field", m_fieldSim);
+        // NOT REQUIRED, since the PhotonVision library does this on its own!
+        //CameraServer.startAutomaticCapture(new HttpCamera("limelight",
+        //        "http://10.40.60.12:5800/stream.mjpg", HttpCameraKind.kMJPGStreamer));
+        //SmartDashboard.putData("Field", m_fieldSim);
     }
 
     /**
@@ -63,7 +64,7 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods. This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        UpdateBotPose();
+        //UpdateBotPose();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

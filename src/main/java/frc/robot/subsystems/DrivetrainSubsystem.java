@@ -222,10 +222,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 states[3].angle.getRadians());
     }
 
-    /**
-   * Sets the desired speeds to zero
-   */
-    public void stop() {
-        drive(new ChassisSpeeds());
-      }
+    
 }
