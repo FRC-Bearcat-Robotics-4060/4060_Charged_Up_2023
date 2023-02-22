@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -18,8 +19,8 @@ public class DriveToPoseCommand extends CommandBase {
   private static final double TRANSLATION_TOLERANCE = 0.1;
   private static final double THETA_TOLERANCE = Units.degreesToRadians(0.5);
 
-  private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
-  private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
+  private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 1);
+  private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 1);
   private static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS =   new TrapezoidProfile.Constraints(8, 8);
 
   private final ProfiledPIDController xController = new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
@@ -82,6 +83,8 @@ public class DriveToPoseCommand extends CommandBase {
       omegaSpeed = 0;
     }
 
+    //board.putNumber("xSpeed", xSpeed);
+    //SmartDashboard.putNumber("ySpeed", ySpeed);
     drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, omegaSpeed, robotPose.getRotation()));
   }
@@ -93,7 +96,7 @@ public class DriveToPoseCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    drivetrainSubsystem.stop();
+    drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
 }

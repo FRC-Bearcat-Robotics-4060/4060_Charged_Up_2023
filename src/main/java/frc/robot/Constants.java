@@ -73,19 +73,26 @@ public final class Constants {
     }
 
     public static VisionCamera[] VisionCameras = new VisionCamera[] {
-        new VisionCamera(
+        /*new VisionCamera(
             CamType.LimeLight, 
             "Limelight", 
             "limelight", 
             new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d()),
             null
-        ),
+        ),*/
         new VisionCamera(
             CamType.PhotonVision, 
             "PV1", 
             "pv1_onboard", 
             new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d()),
             new PhotonCamera("pv1_onboard")
-        )
+        ),
+        new VisionCamera(
+            CamType.PhotonVision, 
+            "PV2", 
+            "pv2_onboard", 
+            new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d(0,0,Units.degreesToRadians(180))),
+            new PhotonCamera("pv2_onboard")
+        ),
     };
 }
