@@ -4,13 +4,17 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveToPoseCommand;
@@ -27,7 +31,7 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-    private final XboxController m_controller = new XboxController(0);
+    private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -40,11 +44,11 @@ public class RobotContainer {
         // Right stick X axis -> rotation
         m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(m_drivetrainSubsystem,
                 () -> poseEstimator.getCurrentPose().getRotation(),
-                () -> -modifyAxis(m_controller.getLeftY())
+                () -> -modifyAxis(m_controller.getRawAxis(0))
                         * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(m_controller.getLeftX())
+                () -> -modifyAxis(m_controller.getRawAxis(1))
                         * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(m_controller.getRightX())
+                () -> -modifyAxis(m_controller.getTwist())
                         * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
         // Configure the button bindings
@@ -58,40 +62,19 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // Back button zeros the gyroscope
-        // TODO: Do we have a subsystem this should require?
-        new Trigger(m_controller::getBackButton)
-                .onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope));
 
-        new Trigger(m_controller::getStartButton)
-            .onTrue(new PrintPositionCommand(poseEstimator));
+        //https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
 
-        // Borrowed from https://github.com/STMARobotics/frc-7028-2023/blob/main/src/main/java/frc/robot/RobotContainer.java
-        // Drive to cone node to the left of tag 1, then just shoot
+        Trigger button3 = new JoystickButton(m_controller, 3); 
+        button3.onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope));
+
+        Trigger button4 = new JoystickButton(m_controller, 4); 
+        button4.onTrue(new PrintPositionCommand(poseEstimator));
+
+        Trigger button5 = new JoystickButton(m_controller, 5); 
+        button5.whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+        new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
         
-        new Trigger(m_controller::getAButton)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97)
-            )));
-        
-        new Trigger(m_controller::getXButton)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(13.66, 2.56, Rotation2d.fromDegrees(-4.97)
-            )));
-
-        new Trigger(m_controller::getYButton)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(14.40, 4.11, Rotation2d.fromDegrees(5.84)
-            )));
-
-        new Trigger(m_controller::getBButton)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(12.65, 2.46, Rotation2d.fromDegrees(-180.00)
-            )));
-            
-        // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
-        //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
-        //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
         
     }
 
