@@ -83,7 +83,7 @@ public class RobotContainer {
 
         new JoystickButton(m_controller, 7)
             .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,     
-                new Pose2d(14.40, 4.11, Rotation2d.fromDegrees(5.84))));
+                new Pose2d(14.40, 4.11, Rotation2d.fromDegrees(5.84))))
 
         new JoystickButton(m_controller, 8)
             .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
