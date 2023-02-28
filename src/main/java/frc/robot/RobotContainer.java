@@ -14,11 +14,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DriveToPoseCommand;
-import frc.robot.commands.PrintPositionCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.PoseEstimatorSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -31,6 +29,11 @@ public class RobotContainer {
 
     private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
+
+    public final Hand m_hand = new Hand();
+    public final Wrist m_wrist = new Wrist();
+    public final Arm m_arm = new Arm();
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -91,7 +94,18 @@ public class RobotContainer {
             
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
-        //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));  
+        //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
+
+        // Temporary commands to ensure that all commands and subsystems are able to compile
+        new JoystickButton(m_controller, 9)
+            .whileTrue(new Arm_Move(1000, m_arm));
+
+        new JoystickButton(m_controller, 10)
+            .whileTrue(new Wrist_Move(90, m_wrist));
+
+        new JoystickButton(m_controller, 11)
+            .whileTrue(new Hand_Grip(90, m_hand));
+
     }
 
     /**
