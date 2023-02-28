@@ -4,12 +4,10 @@
 
 package frc.robot;
 
-import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -48,7 +46,7 @@ public class RobotContainer {
                         * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                 () -> -modifyAxis(m_controller.getRawAxis(1))
                         * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(Math.pow(m_controller.getTwist(), 2.1))
+                () -> -modifyAxis(m_controller.getTwist())
                         * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
         // Configure the button bindings
@@ -65,17 +63,35 @@ public class RobotContainer {
 
         //https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
 
-        Trigger button3 = new JoystickButton(m_controller, 3); 
-        button3.onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope));
+        // TODO: Do we have a subsystem this should require?
+        new JoystickButton(m_controller, 3)
+            .onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope));
 
-        Trigger button4 = new JoystickButton(m_controller, 4); 
-        button4.onTrue(new PrintPositionCommand(poseEstimator));
+        new JoystickButton(m_controller, 4)
+            .onTrue(new PrintPositionCommand(poseEstimator));
 
-        Trigger button5 = new JoystickButton(m_controller, 5); 
-        button5.whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-        new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
-        
-        
+        // Borrowed from https://github.com/STMARobotics/frc-7028-2023/blob/main/src/main/java/frc/robot/RobotContainer.java
+        // Drive to cone node to the left of tag 1, then just shoot
+
+        new JoystickButton(m_controller, 5)
+            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+                new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
+
+        new JoystickButton(m_controller, 6)
+            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+                new Pose2d(13.66, 2.56, Rotation2d.fromDegrees(-4.97))));
+
+        new JoystickButton(m_controller, 7)
+            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,     
+                new Pose2d(14.40, 4.11, Rotation2d.fromDegrees(5.84))));
+
+        new JoystickButton(m_controller, 8)
+            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+                new Pose2d(12.65, 2.46, Rotation2d.fromDegrees(-180.00))));     
+            
+        // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
+        //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
+        //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));  
     }
 
     /**
