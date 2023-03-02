@@ -70,27 +70,27 @@ public class RobotContainer {
         new JoystickButton(m_controller, 3)
             .onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope));
 
-        new JoystickButton(m_controller, 4)
-            .onTrue(new PrintPositionCommand(poseEstimator));
+        // new JoystickButton(m_controller, 4)
+        //     .onTrue(new PrintPositionCommand(poseEstimator));
 
         // Borrowed from https://github.com/STMARobotics/frc-7028-2023/blob/main/src/main/java/frc/robot/RobotContainer.java
         // Drive to cone node to the left of tag 1, then just shoot
 
-        new JoystickButton(m_controller, 5)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
+        // new JoystickButton(m_controller, 5)
+        //     .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+        //         new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
 
-        new JoystickButton(m_controller, 6)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(13.66, 2.56, Rotation2d.fromDegrees(-4.97))));
+        // new JoystickButton(m_controller, 6)
+        //     .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+        //         new Pose2d(13.66, 2.56, Rotation2d.fromDegrees(-4.97))));
 
-        new JoystickButton(m_controller, 7)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,     
-                new Pose2d(14.40, 4.11, Rotation2d.fromDegrees(5.84))));
+        // new JoystickButton(m_controller, 7)
+        //     .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,     
+        //         new Pose2d(14.40, 4.11, Rotation2d.fromDegrees(5.84))));
 
-        new JoystickButton(m_controller, 8)
-            .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
-                new Pose2d(12.65, 2.46, Rotation2d.fromDegrees(-180.00))));     
+        // new JoystickButton(m_controller, 8)
+        //     .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
+        //         new Pose2d(12.65, 2.46, Rotation2d.fromDegrees(-180.00))));     
             
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))

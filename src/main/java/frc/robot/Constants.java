@@ -26,39 +26,43 @@ public final class Constants {
      *
      * Should be measured from center to center.
      */
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.6223;
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.473075;
     /**
      * The front-to-back distance between the drivetrain wheels.
      *
      * Should be measured from center to center.
      */
-    public static final double DRIVETRAIN_WHEELBASE_METERS = 0.6223;
+    public static final double DRIVETRAIN_WHEELBASE_METERS = 0.473075;
 
     // public static final int DRIVETRAIN_PIGEON_ID = 0; // Set Pigeon ID
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
-    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
-    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 12;
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(355.0);
+    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
+    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 11;
+    // public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(231.416);
 
-    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 7;
-    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 8;
-    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(44.0);
+    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 6;
+    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 2;
+    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 10;
+    // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(229.570);
 
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 3;
-    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 4;
-    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11;
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(329.8);
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
+    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 7;
+    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 13;
+    // public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(65.039);
 
-    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 5;
-    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6;
-    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10;
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(27.2);
+    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 8;
+    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 3;
+    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 12;
+    // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(105.029);
 
-    public static final int ARM_MOTOR_ID = 15;
-    public static final int WRIST_SERVO_ID = 1;
-    public static final int HAND_SERVO_ID = 2;
+    public static final int ARM_MOTOR_ID = 9;
+    public static final int WRIST_SERVO_ID = 0;
+    public static final int HAND_SERVO_ID = 1;
     
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
         // Front left
@@ -84,19 +88,19 @@ public final class Constants {
             new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d()),
             null
         ),*/
-        new VisionCamera(
-            CamType.PhotonVision, 
-            "PV1", 
-            "pv1_onboard", 
-            new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d()),
-            new PhotonCamera("pv1_onboard")
-        ),
-        new VisionCamera(
+        // new VisionCamera(
+        //     CamType.PhotonVision, 
+        //     "PV1", 
+        //     "pv1_onboard", 
+        //     new Transform3d(new Translation3d(-0.7, 0.0, -0.5), new Rotation3d()),
+        //     new PhotonCamera("pv1_onboard")
+        // ),
+      /*   new VisionCamera(
             CamType.PhotonVision, 
             "PV2", 
             "pv2_onboard", 
             new Transform3d(new Translation3d(-0.3425, 0.0, -0.233), new Rotation3d(0,0,Units.degreesToRadians(180))),
             new PhotonCamera("pv2_onboard")
-        ),
+        ), */
     };
 }
