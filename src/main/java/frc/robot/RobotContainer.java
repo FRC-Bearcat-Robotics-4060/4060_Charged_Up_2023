@@ -30,9 +30,9 @@ public class RobotContainer {
     private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
 
-    public final Hand m_hand = new Hand();
-    public final Wrist m_wrist = new Wrist();
-    public final Arm m_arm = new Arm();
+    // public final Hand m_hand = new Hand();
+    // public final Wrist m_wrist = new Wrist();
+    // public final Arm m_arm = new Arm();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -97,14 +97,14 @@ public class RobotContainer {
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
 
         // Temporary commands to ensure that all commands and subsystems are able to compile
-        new JoystickButton(m_controller, 9)
-            .whileTrue(new Arm_Move(1000, m_arm));
+        // new JoystickButton(m_controller, 9)
+        //     .whileTrue(new Arm_Move(1000, m_arm));
 
-        new JoystickButton(m_controller, 10)
-            .whileTrue(new Wrist_Move(90, m_wrist));
+        // new JoystickButton(m_controller, 10)
+        //     .whileTrue(new Wrist_Move(90, m_wrist));
 
-        new JoystickButton(m_controller, 11)
-            .whileTrue(new Hand_Grip(90, m_hand));
+        // new JoystickButton(m_controller, 11)
+        //     .whileTrue(new Hand_Grip(90, m_hand));
 
     }
 
