@@ -123,7 +123,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // Similar helpers also exist for Mk4 modules using the Mk4SwerveModuleHelper class.
 
         MkModuleConfiguration module_config = new MkModuleConfiguration();
-        module_config.setDriveCurrentLimit(30.0);
+        module_config.setDriveCurrentLimit(40.0);
         module_config.setSteerCurrentLimit(20.0);
         module_config.setSteerPID(1.0, 0.0, 0.1); // From getDefaultSteerNEO
 
