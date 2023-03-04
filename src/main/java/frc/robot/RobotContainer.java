@@ -6,8 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,6 +33,9 @@ public class RobotContainer {
 
     private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
+
+    
+    private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     // public final Hand m_hand = new Hand();
     // public final Wrist m_wrist = new Wrist();
@@ -54,6 +61,13 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+        m_chooser.setDefaultOption("None", new InstantCommand());
+        m_chooser.addOption("Drive Forward 2m",
+                new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+                        poseEstimator.getCurrentPose().transformBy(
+                                new Transform2d(new Translation2d(2., 0.), new Rotation2d()))));
+        SmartDashboard.putData("Auto choices", m_chooser);
     }
 
     /**
@@ -76,6 +90,9 @@ public class RobotContainer {
         // Borrowed from https://github.com/STMARobotics/frc-7028-2023/blob/main/src/main/java/frc/robot/RobotContainer.java
         // Drive to cone node to the left of tag 1, then just shoot
 
+        // new JoystickButton(m_controller, 11).whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem,
+        //         poseEstimator, poseEstimator.getCurrentPose().transformBy(
+        //                 new Transform2d(new Translation2d(1., 0.), new Rotation2d()))));
         // new JoystickButton(m_controller, 5)
         //     .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
         //         new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
@@ -114,8 +131,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return new InstantCommand();
+        return m_chooser.getSelected();
     }
 
     private static double deadband(double value, double deadband) {
