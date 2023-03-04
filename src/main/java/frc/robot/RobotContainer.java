@@ -63,10 +63,14 @@ public class RobotContainer {
         configureButtonBindings();
 
         m_chooser.setDefaultOption("None", new InstantCommand());
-        m_chooser.addOption("Drive Forward 2m",
+        m_chooser.addOption("Drive Forward 2.0m",
                 new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
                         poseEstimator.getCurrentPose().transformBy(
                                 new Transform2d(new Translation2d(2., 0.), new Rotation2d()))));
+        m_chooser.addOption("Drive Back 0.75m",
+                new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+                        poseEstimator.getCurrentPose().transformBy(
+                                new Transform2d(new Translation2d(-0.75, 0.), new Rotation2d()))));
         SmartDashboard.putData("Auto choices", m_chooser);
     }
 
