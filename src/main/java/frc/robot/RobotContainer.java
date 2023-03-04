@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import org.apache.commons.lang3.Conversion;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,6 +40,11 @@ public class RobotContainer {
     
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+    private final double BackUpScalar = 1;
+    private final double DriveOutScalar = 1;
+    private final double ChargeScalar = 1;
+    private final double CrossToChargeScalar = 1;
+
     // public final Hand m_hand = new Hand();
     // public final Wrist m_wrist = new Wrist();
     // public final Arm m_arm = new Arm();
@@ -63,14 +71,90 @@ public class RobotContainer {
         configureButtonBindings();
 
         m_chooser.setDefaultOption("None", new InstantCommand());
-        m_chooser.addOption("Drive Forward 2.0m",
+
+        m_chooser.addOption("Back Up",
                 new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
-                        poseEstimator.getCurrentPose().transformBy(
-                                new Transform2d(new Translation2d(2., 0.), new Rotation2d()))));
-        m_chooser.addOption("Drive Back 0.75m",
-                new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
-                        poseEstimator.getCurrentPose().transformBy(
-                                new Transform2d(new Translation2d(-0.75, 0.), new Rotation2d()))));
+                poseEstimator.getCurrentPose().transformBy(
+                    new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-14)*BackUpScalar, 
+                     Units.inchesToMeters(0)*BackUpScalar), new Rotation2d()))));
+
+        m_chooser.addOption("Center: Back Up + Driveout",
+        new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+                 poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-14)*BackUpScalar, 
+                     Units.inchesToMeters(0)*BackUpScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                   (Units.inchesToMeters(149)*DriveOutScalar, 
+                    Units.inchesToMeters(0)*DriveOutScalar), new Rotation2d())))));
+
+        m_chooser.addOption("Center: Back Up + Driveout + Charge",
+        new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+                 poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-14)*BackUpScalar, 
+                     Units.inchesToMeters(0)*BackUpScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                   (Units.inchesToMeters(149)*DriveOutScalar, 
+                    Units.inchesToMeters(0)*DriveOutScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-65)*ChargeScalar, 
+                    Units.inchesToMeters(0)*ChargeScalar), new Rotation2d()))))));
+
+        m_chooser.addOption("Left: Back Up + Driveout + Charge",
+        new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+                 poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-14)*BackUpScalar, 
+                     Units.inchesToMeters(0)*BackUpScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                   (Units.inchesToMeters(149)*DriveOutScalar, 
+                    Units.inchesToMeters(0)*DriveOutScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(0)*CrossToChargeScalar, 
+                    Units.inchesToMeters(-80)*CrossToChargeScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-65)*ChargeScalar, 
+                    Units.inchesToMeters(0)*ChargeScalar), new Rotation2d())))))));
+
+        m_chooser.addOption("Right: Back Up + Driveout + Charge",
+        new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+                 poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-14)*BackUpScalar, 
+                     Units.inchesToMeters(0)*BackUpScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2ds
+                   (Units.inchesToMeters(149)*DriveOutScalar, 
+                    Units.inchesToMeters(0)*DriveOutScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(0)*CrossToChargeScalar, 
+                    Units.inchesToMeters(80)*CrossToChargeScalar), new Rotation2d())))
+        .andThen(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator,
+        poseEstimator.getCurrentPose().transformBy(
+                new Transform2d(new Translation2d
+                    (Units.inchesToMeters(-65)*ChargeScalar, 
+                    Units.inchesToMeters(0)*ChargeScalar), new Rotation2d())))))));
+
+
+       
+        
         SmartDashboard.putData("Auto choices", m_chooser);
     }
 
