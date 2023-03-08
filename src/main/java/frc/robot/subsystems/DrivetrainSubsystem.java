@@ -63,7 +63,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // with a measured amount.
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND =
             MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                    DRIVETRAIN_WHEELBASE_METERS / 2.0);
+                    DRIVETRAIN_WHEELBASE_METERS / 2.0) / 2.0;
 
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
             // Front left
@@ -123,7 +123,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // Similar helpers also exist for Mk4 modules using the Mk4SwerveModuleHelper class.
 
         MkModuleConfiguration module_config = new MkModuleConfiguration();
-        module_config.setDriveCurrentLimit(30.0);
+        module_config.setDriveCurrentLimit(40.0);
         module_config.setSteerCurrentLimit(20.0);
         module_config.setSteerPID(1.0, 0.0, 0.1); // From getDefaultSteerNEO
 
