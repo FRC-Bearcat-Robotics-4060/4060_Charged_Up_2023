@@ -55,6 +55,10 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6;
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10;
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(27.2);
+
+    public static final int ARM_MOTOR_ID = 15;
+    public static final int WRIST_SERVO_ID = 1;
+    public static final int HAND_SERVO_ID = 2;
     
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
         // Front left
