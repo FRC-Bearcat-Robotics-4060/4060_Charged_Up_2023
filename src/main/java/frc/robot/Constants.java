@@ -70,6 +70,11 @@ public final class Constants {
     public static class FieldConstants {
         public static final double length = Units.feetToMeters(54);
         public static final double width = Units.feetToMeters(27);
+        public static final double[] CubeYChannels = { 
+            Units.inchesToMeters(42.19),
+            Units.inchesToMeters(108.19),
+            Units.inchesToMeters(174.19)
+        };
     }
 
     public static VisionCamera[] VisionCameras = new VisionCamera[] {
