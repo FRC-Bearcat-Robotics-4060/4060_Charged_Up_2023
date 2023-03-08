@@ -66,7 +66,9 @@ public class AlignToCubeChannelCommand extends CommandBase {
     
     // what Y channel are we closest to?
     Double targetY = findClosestValue(Constants.FieldConstants.CubeYChannels, currentPose.getY());
-    Double targetX = Units.inchesToMeters(596.6) - (Constants.DRIVETRAIN_WHEELBASE_METERS/2); //Default Red dropff X Position.
+
+    Double halfRobotThickness = ((Constants.BumperThickness * 2) + Constants.DRIVETRAIN_WHEELBASE_METERS) / 2;
+    Double targetX = Units.inchesToMeters(596.6) - halfRobotThickness; //Default Red dropff X Position.
 
     if (direction == Rotation2d.fromDegrees(0.00)){
         // the red wall is at X: 596.6 inches away from 0,0 (corner by blue driverstation)
@@ -75,7 +77,7 @@ public class AlignToCubeChannelCommand extends CommandBase {
     } else {
         // the blue wall is at X: 53.854 inches away from 0,0 (corner by blue driverstation)
         // the center of the robot will be that value PLUS half of the robot length
-        targetX = Units.inchesToMeters(53.854) + (Constants.DRIVETRAIN_WHEELBASE_METERS/2); //Default Red dropff X Position.
+        targetX = Units.inchesToMeters(53.854) + halfRobotThickness; //Default Red dropff X Position.
 
     }
     this.goalPose = new Pose2d(targetX, targetY, direction);

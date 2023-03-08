@@ -77,6 +77,10 @@ public final class Constants {
         };
     }
 
+    // Used in AlignToCubeChannelCommnd
+    // It might be more useful to have total robot length and with values
+    public static final double BumperThickness = Units.inchesToMeters(3.5);
+
     public static VisionCamera[] VisionCameras = new VisionCamera[] {
         /*new VisionCamera(
             CamType.LimeLight, 
