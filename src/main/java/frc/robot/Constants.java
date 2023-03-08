@@ -74,7 +74,16 @@ public final class Constants {
     public static class FieldConstants {
         public static final double length = Units.feetToMeters(54);
         public static final double width = Units.feetToMeters(27);
+        public static final double[] CubeYChannels = { 
+            Units.inchesToMeters(42.19),
+            Units.inchesToMeters(108.19),
+            Units.inchesToMeters(174.19)
+        };
     }
+
+    // Used in AlignToCubeChannelCommnd
+    // It might be more useful to have total robot length and with values
+    public static final double BumperThickness = Units.inchesToMeters(3.5);
 
     public static VisionCamera[] VisionCameras = new VisionCamera[] {
         /*new VisionCamera(

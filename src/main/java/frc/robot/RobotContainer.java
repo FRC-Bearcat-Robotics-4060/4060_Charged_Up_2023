@@ -76,6 +76,7 @@ public class RobotContainer {
         // Borrowed from https://github.com/STMARobotics/frc-7028-2023/blob/main/src/main/java/frc/robot/RobotContainer.java
         // Drive to cone node to the left of tag 1, then just shoot
 
+        /*
         new JoystickButton(m_controller, 5)
             .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
                 new Pose2d(14.15, 1.07, Rotation2d.fromDegrees(-5.97))));
@@ -91,7 +92,10 @@ public class RobotContainer {
         new JoystickButton(m_controller, 8)
             .whileTrue(new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, 
                 new Pose2d(12.65, 2.46, Rotation2d.fromDegrees(-180.00))));     
-            
+        */
+
+        new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
+
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
