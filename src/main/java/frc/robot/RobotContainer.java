@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,9 +37,26 @@ public class RobotContainer {
 
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+    private Pose2d startingPose;
+
     // public final Hand m_hand = new Hand();
     // public final Wrist m_wrist = new Wrist();
     // public final Arm m_arm = new Arm();
+
+    Pose2d translate_pose_meters(Pose2d start, double x_meters, double y_meters)
+    {
+        return start.transformBy(new Transform2d(new Translation2d(x_meters, y_meters), new Rotation2d()));
+    }
+
+    Pose2d translate_pose_inches(Pose2d start, double x_inches, double y_inches)
+    {
+        return translate_pose_meters(start, Units.inchesToMeters(x_inches), Units.inchesToMeters(y_inches));
+    }
+
+    DriveToPoseCommand GoToInches(double x, double y)
+    {
+        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y));
+    }
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -59,7 +79,33 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
 
+        startingPose = poseEstimator.getCurrentPose();
+
         m_chooser.setDefaultOption("None", new InstantCommand());
+
+        m_chooser.addOption("Back Up",
+                GoToInches(-14, 0));
+
+        m_chooser.addOption("Center: Back Up + Driveout",
+                GoToInches(-14, 0)
+                .andThen(GoToInches(135, 0)));
+
+        m_chooser.addOption("Center: Back Up + Driveout + Charge",
+                GoToInches(-14, 0)
+                .andThen(GoToInches(135, 0))
+                .andThen(GoToInches(75, 0)));
+
+        m_chooser.addOption("Left: Back Up + Driveout + Charge",
+                GoToInches(-14, 0)
+                .andThen(GoToInches(135, 0))
+                .andThen(GoToInches(0, -80))
+                .andThen(GoToInches(75, -80)));
+
+        m_chooser.addOption("Right: Back Up + Driveout + Charge",
+                GoToInches(-14, 0)
+                .andThen(GoToInches(135, 0))
+                .andThen(GoToInches(0, 80))
+                .andThen(GoToInches(75, 80)));
 
         SmartDashboard.putData("Auto choices", m_chooser);
     }
