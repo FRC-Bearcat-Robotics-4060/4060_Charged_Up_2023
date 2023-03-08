@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,6 +31,8 @@ public class RobotContainer {
 
     private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
+
+    private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     // public final Hand m_hand = new Hand();
     // public final Wrist m_wrist = new Wrist();
@@ -54,6 +58,10 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+        m_chooser.setDefaultOption("None", new InstantCommand());
+
+        SmartDashboard.putData("Auto choices", m_chooser);
     }
 
     /**
@@ -118,8 +126,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return new InstantCommand();
+        return m_chooser.getSelected();
     }
 
     private static double deadband(double value, double deadband) {
