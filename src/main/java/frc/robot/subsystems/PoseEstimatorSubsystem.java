@@ -197,9 +197,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase implements Supplier<Po
   }
 
 
-    @Override
-    public Pose2d get() {
-        return poseEstimator.getEstimatedPosition();
-    }
+  @Override
+  public Pose2d get() {
+      return getCurrentPose();
+  }
 
 }
