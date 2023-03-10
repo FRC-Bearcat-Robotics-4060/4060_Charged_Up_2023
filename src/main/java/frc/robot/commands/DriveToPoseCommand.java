@@ -16,15 +16,15 @@ import frc.robot.subsystems.DrivetrainSubsystem;
  */
 public class DriveToPoseCommand extends CommandBase {
   
-  private static final double TRANSLATION_TOLERANCE = 0.25;
-  private static final double THETA_TOLERANCE = Units.degreesToRadians(0.5);
+  private static final double TRANSLATION_TOLERANCE = Units.inchesToMeters(1.0);
+  private static final double THETA_TOLERANCE = Units.degreesToRadians(2.0);
 
-  private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 2);
-  private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 2);
+  private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
+  private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
   private static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS =   new TrapezoidProfile.Constraints(8, 8);
 
-  private final ProfiledPIDController xController = new ProfiledPIDController(3, 0.5, 0, X_CONSTRAINTS);
-  private final ProfiledPIDController yController = new ProfiledPIDController(3, 0.5, 0, Y_CONSTRAINTS);
+  private final ProfiledPIDController xController = new ProfiledPIDController(10, 0, 0, X_CONSTRAINTS);
+  private final ProfiledPIDController yController = new ProfiledPIDController(10, 0, 0, Y_CONSTRAINTS);
   private final ProfiledPIDController thetaController = new ProfiledPIDController(2, 0.5, 0, OMEGA_CONSTRAINTS);
 
   private final DrivetrainSubsystem drivetrainSubsystem;
