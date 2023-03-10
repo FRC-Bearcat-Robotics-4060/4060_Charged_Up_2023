@@ -149,6 +149,15 @@ public class RobotContainer {
                 new Pose2d(12.65, 2.46, Rotation2d.fromDegrees(-180.00))));     
         */
 
+        // Debug commands which move to various points with button presses, relative to the starting position.
+        // new JoystickButton(m_controller, 1).onTrue(GoToInches(0, 0));
+        // new JoystickButton(m_controller, 7).onTrue(GoToInches(48, 0));
+        // new JoystickButton(m_controller, 8).onTrue(GoToInches(24, 0));
+        // new JoystickButton(m_controller, 9).onTrue(GoToInches(48, 24));
+        // new JoystickButton(m_controller, 10).onTrue(GoToInches(24, 24));
+        // new JoystickButton(m_controller, 11).onTrue(GoToInches(48, 48));
+        // new JoystickButton(m_controller, 12).onTrue(GoToInches(24, 48));
+
         new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
 
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
