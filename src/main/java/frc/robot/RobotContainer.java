@@ -76,9 +76,6 @@ public class RobotContainer {
                 () -> -modifyTwistAxis(m_controller.getTwist())
                         * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
-        // Configure the button bindings
-        configureButtonBindings();
-
         startingPose = poseEstimator.getCurrentPose();
 
         m_chooser.setDefaultOption("None", new InstantCommand());
@@ -108,6 +105,10 @@ public class RobotContainer {
                 .andThen(GoToInches(75, 80)));
 
         SmartDashboard.putData("Auto choices", m_chooser);
+
+        
+        // Configure the button bindings
+        configureButtonBindings();
     }
 
     /**
