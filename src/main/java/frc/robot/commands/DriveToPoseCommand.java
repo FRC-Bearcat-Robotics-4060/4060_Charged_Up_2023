@@ -39,9 +39,6 @@ public class DriveToPoseCommand extends CommandBase {
     this.poseProvider = poseProvider;
     this.goalPose = goalPose;
 
-    xController.setTolerance(0.2);
-    yController.setTolerance(0.2);
-    thetaController.setTolerance(Units.degreesToRadians(3));
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     addRequirements(drivetrainSubsystem);
