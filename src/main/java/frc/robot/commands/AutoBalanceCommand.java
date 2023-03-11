@@ -12,11 +12,10 @@ import java.util.function.Supplier;
 
 public class AutoBalanceCommand extends CommandBase {
     private final DrivetrainSubsystem m_drivetrainSubsystem;
-    private double m_onBalanceThreshold = 2.5;
+    private double m_onBalanceThreshold = 1.5;
     private double m_maxVelocity_mps = 0.35;
 
-    public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem,
-        Supplier<Rotation2d> robotAngleSupplier) {
+    public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
 
         addRequirements(drivetrainSubsystem);
@@ -45,8 +44,8 @@ public class AutoBalanceCommand extends CommandBase {
             double sign = RollAngleDegrees > 0.0 ? 1.0 : -1.0;
 
             // 1m/s when we're at a 15 degree angle
-            double min_velocity = 0.02;
-            double max_velocity = 0.6;
+            double min_velocity = 0.017;
+            double max_velocity = 0.5;
             double P = max_velocity / 15;
 
             double amplitude = P * RollAngleDegrees;
