@@ -196,6 +196,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // counter-clockwise makes the angle increase.
         return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
     }
+
+    public float getPitch() {
+        return m_navx.getPitch();
+    }
+
+    public float getRoll() {
+        return m_navx.getRoll();
+    }
+
     public SwerveModulePosition[] getModulePositions() {
         return Arrays.stream(swerveModules).map(module -> module.getPosition()).toArray(SwerveModulePosition[]::new);
     }
