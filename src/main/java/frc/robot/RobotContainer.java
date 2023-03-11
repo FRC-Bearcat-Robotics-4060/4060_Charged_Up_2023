@@ -55,7 +55,12 @@ public class RobotContainer {
 
     DriveToPoseCommand GoToInches(double x, double y)
     {
-        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y));
+        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y), false);
+    }
+
+    DriveToPoseCommand GoToInches_ExitOnRoll(double x, double y)
+    {
+        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y), true);
     }
 
     /**
@@ -158,7 +163,7 @@ public class RobotContainer {
         // new JoystickButton(m_controller, 11).onTrue(GoToInches(48, 48));
         // new JoystickButton(m_controller, 12).onTrue(GoToInches(24, 48));
 
-        new JoystickButton(m_controller, 2).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem, () -> poseEstimator.getCurrentPose().getRotation()));
+        new JoystickButton(m_controller, 2).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem));
         new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
 
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(

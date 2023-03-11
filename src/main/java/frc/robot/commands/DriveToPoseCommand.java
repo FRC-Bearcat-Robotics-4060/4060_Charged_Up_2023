@@ -31,13 +31,18 @@ public class DriveToPoseCommand extends CommandBase {
   private final Supplier<Pose2d> poseProvider;
   private final Pose2d goalPose;
 
+  private Boolean exitOnRoll = false;
+  private int rollExceededCount = 0;
+
   public DriveToPoseCommand(
         DrivetrainSubsystem drivetrainSubsystem,
         Supplier<Pose2d> poseProvider,
-        Pose2d goalPose) {
+        Pose2d goalPose,
+        Boolean exitIfRollEncountered) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.poseProvider = poseProvider;
     this.goalPose = goalPose;
+    this.exitOnRoll = exitIfRollEncountered;
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -89,7 +94,21 @@ public class DriveToPoseCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return xController.atGoal() && yController.atGoal() && thetaController.atGoal();
+
+    final double rollThreshold = 10.0;
+
+    Boolean rolled = this.exitOnRoll && Math.abs(drivetrainSubsystem.getRoll()) >= rollThreshold;
+    if (rolled)
+    {
+        rollExceededCount++;
+        rolled = rollExceededCount >= 10;
+    }
+    else {
+        rollExceededCount = 0;
+    }
+    Boolean atGoal = xController.atGoal() && yController.atGoal() && thetaController.atGoal();
+
+    return rolled || atGoal;
   }
 
   @Override
