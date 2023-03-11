@@ -158,6 +158,7 @@ public class RobotContainer {
         // new JoystickButton(m_controller, 11).onTrue(GoToInches(48, 48));
         // new JoystickButton(m_controller, 12).onTrue(GoToInches(24, 48));
 
+        new JoystickButton(m_controller, 2).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem, () -> poseEstimator.getCurrentPose().getRotation()));
         new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
 
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
