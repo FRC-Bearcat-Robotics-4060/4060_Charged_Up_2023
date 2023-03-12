@@ -29,6 +29,13 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private static final double center_DriverOverRamp_inches = 200.0;
+    private static final double center_DriveToRamp_inches = 60.0;
+    private static final double left_StrafeToRamp = -70.0;
+    private static final double right_StrafeToRamp = -left_StrafeToRamp;
+    private static final double side_DrivePastRamp = 180.00;
+
     // The robot's subsystems and commands are defined here...
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
@@ -84,47 +91,36 @@ public class RobotContainer {
         startingPose = poseEstimator.getCurrentPose();
 
         m_chooser.setDefaultOption("None", new InstantCommand());
-
-        m_chooser.addOption("Back Up",
-                GoToInches(-14, 0));
-
-        m_chooser.addOption("Center: Back Up + Driveout",
-                GoToInches(-14, 0)
-                .andThen(GoToInches(135, 0)));
         
-        m_chooser.addOption("Center: Balance Only",
-            GoToInches_ExitOnRoll(60.0, 0.0)
-        .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
+        m_chooser.addOption("Center: Charge Only",
+                GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0)
+                .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
         
-        m_chooser.addOption("Center: Drive Out then Balance",
-                GoToInches_ExitOnRoll(60.0, 0.0)
-                .andThen(GoToInches(100.0, 0.0))
-                .andThen(GoToInches(200.0, 0.0))
-                .andThen(GoToInches_ExitOnRoll(60.0, 0.0))
+        m_chooser.addOption("Center: Drive Out then Charge",
+                GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0)
+                // Split move into two to avoid doing it too fast
+                .andThen(GoToInches(center_DriverOverRamp_inches / 2, 0.0))
+                .andThen(GoToInches(center_DriverOverRamp_inches, 0.0))
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
-        m_chooser.addOption("Center: Back Up + Driveout + Charge",
-                GoToInches(-14, 0)
-                .andThen(GoToInches(135, 0))
-                .andThen(GoToInches(75, 0)));
+        m_chooser.addOption("Left: Driveout",
+                GoToInches(side_DrivePastRamp, 0));
 
         m_chooser.addOption("Left: Driveout + Charge",
-                GoToInches(180, 0)
-                .andThen(GoToInches(180, -70))
-                .andThen(GoToInches_ExitOnRoll(100, -70))
+                GoToInches(side_DrivePastRamp, 0)
+                .andThen(GoToInches(side_DrivePastRamp, left_StrafeToRamp))
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, left_StrafeToRamp))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
-        m_chooser.addOption("Left: Back Up + Driveout + Charge",
-                GoToInches(-14, 0)
-                .andThen(GoToInches(135, 0))
-                .andThen(GoToInches(0, -80))
-                .andThen(GoToInches(75, -80)));
+        m_chooser.addOption("Right: Driveout",
+                GoToInches(side_DrivePastRamp, 0));
 
-        m_chooser.addOption("Right: Back Up + Driveout + Charge",
-                GoToInches(-14, 0)
-                .andThen(GoToInches(135, 0))
-                .andThen(GoToInches(0, 80))
-                .andThen(GoToInches(75, 80)));
+        m_chooser.addOption("Right: Driveout + Charge",
+                GoToInches(side_DrivePastRamp, 0)
+                .andThen(GoToInches(side_DrivePastRamp, right_StrafeToRamp))
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, right_StrafeToRamp))
+                .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
         SmartDashboard.putData("Auto choices", m_chooser);
 
