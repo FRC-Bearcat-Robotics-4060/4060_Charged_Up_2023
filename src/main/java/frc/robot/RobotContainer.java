@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,6 +41,14 @@ public class RobotContainer {
 
     private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
+
+    private final CubeFlipperSubsystem m_cubeFlipperSubsystem = new CubeFlipperSubsystem();
+    private CommandBase EjectCubeCommand = Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem);
+    private CommandBase ParkCubeFlipperCommand = Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem);
+    private CommandBase EjectCubeSequence =
+        EjectCubeCommand
+        .andThen(Commands.waitSeconds(Constants.CUBE_FLIPPER_EJECT_DELAY_S))
+        .andThen(ParkCubeFlipperCommand);
 
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -86,33 +95,41 @@ public class RobotContainer {
         startingPose = poseEstimator.getCurrentPose();
 
         m_chooser.setDefaultOption("None", new InstantCommand());
+
+        m_chooser.addOption("Eject Cube", EjectCubeSequence);
         
-        m_chooser.addOption("Center: Charge Only",
-                GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0)
+        m_chooser.addOption("Center: Charge",
+                EjectCubeSequence
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
         
-        m_chooser.addOption("Center: Drive Out then Charge",
-                GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0)
+        m_chooser.addOption("Center: Drive Out + Charge",
+                EjectCubeSequence
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 // Split move into two to avoid doing it too fast
                 .andThen(GoToInches(center_DriverOverRamp_inches / 2, 0.0))
                 .andThen(GoToInches(center_DriverOverRamp_inches, 0.0))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
-        m_chooser.addOption("Left: Driveout",
-                GoToInches(side_DrivePastRamp, 0));
+        m_chooser.addOption("Left: Drive Out",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0)));
 
-        m_chooser.addOption("Left: Driveout + Charge",
-                GoToInches(side_DrivePastRamp, 0)
+        m_chooser.addOption("Left: Drive Out + Charge",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0))
                 .andThen(GoToInches(side_DrivePastRamp, left_StrafeToRamp))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, left_StrafeToRamp))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
-        m_chooser.addOption("Right: Driveout",
-                GoToInches(side_DrivePastRamp, 0));
+        m_chooser.addOption("Right: Drive Out",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0)));
 
-        m_chooser.addOption("Right: Driveout + Charge",
-                GoToInches(side_DrivePastRamp, 0)
+        m_chooser.addOption("Right: Drive Out + Charge",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0))
                 .andThen(GoToInches(side_DrivePastRamp, right_StrafeToRamp))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, right_StrafeToRamp))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
