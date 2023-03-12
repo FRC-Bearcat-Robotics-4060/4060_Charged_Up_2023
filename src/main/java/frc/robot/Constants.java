@@ -21,6 +21,13 @@ import org.photonvision.PhotonCamera;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    // Servo assignments
+    public static final int CUBE_FLIPPER_SERVO_CHANNEL = 3;
+    public static final double CUBE_FLIPPER_SERVO_PARK_POS = 0.0;
+    public static final double CUBE_FLIPPER_SERVO_EJECT_POS = 1.0;
+    public static final double CUBE_FLIPPER_EJECT_DELAY_S = 2.0;
+
     /**
      * The left-to-right distance between the drivetrain wheels
      *
