@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -45,10 +44,6 @@ public class RobotContainer {
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     private Pose2d startingPose;
-
-    // public final Hand m_hand = new Hand();
-    // public final Wrist m_wrist = new Wrist();
-    // public final Arm m_arm = new Arm();
 
     Pose2d translate_pose_meters(Pose2d start, double x_meters, double y_meters)
     {
@@ -181,16 +176,6 @@ public class RobotContainer {
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
-
-        // Temporary commands to ensure that all commands and subsystems are able to compile
-        // new JoystickButton(m_controller, 9)
-        //     .whileTrue(new Arm_Move(1000, m_arm));
-
-        // new JoystickButton(m_controller, 10)
-        //     .whileTrue(new Wrist_Move(90, m_wrist));
-
-        // new JoystickButton(m_controller, 11)
-        //     .whileTrue(new Hand_Grip(90, m_hand));
 
     }
 
