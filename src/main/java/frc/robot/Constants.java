@@ -21,6 +21,13 @@ import org.photonvision.PhotonCamera;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    // Servo assignments
+    public static final int CUBE_FLIPPER_SERVO_CHANNEL = 3;
+    public static final double CUBE_FLIPPER_SERVO_PARK_POS = 0.0;
+    public static final double CUBE_FLIPPER_SERVO_EJECT_POS = 1.0;
+    public static final double CUBE_FLIPPER_EJECT_DELAY_S = 2.0;
+
     /**
      * The left-to-right distance between the drivetrain wheels
      *
@@ -60,10 +67,6 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 12;
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(105.64);
-
-    public static final int ARM_MOTOR_ID = 9;
-    public static final int WRIST_SERVO_ID = 0;
-    public static final int HAND_SERVO_ID = 1;
     
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
         // Front left

@@ -15,10 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -42,13 +42,17 @@ public class RobotContainer {
     private final Joystick m_controller = new Joystick(0);
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
 
+    private final CubeFlipperSubsystem m_cubeFlipperSubsystem = new CubeFlipperSubsystem();
+    private CommandBase EjectCubeCommand = Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem);
+    private CommandBase ParkCubeFlipperCommand = Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem);
+    private CommandBase EjectCubeSequence =
+        EjectCubeCommand
+        .andThen(Commands.waitSeconds(Constants.CUBE_FLIPPER_EJECT_DELAY_S))
+        .andThen(ParkCubeFlipperCommand);
+
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     private Pose2d startingPose;
-
-    // public final Hand m_hand = new Hand();
-    // public final Wrist m_wrist = new Wrist();
-    // public final Arm m_arm = new Arm();
 
     Pose2d translate_pose_meters(Pose2d start, double x_meters, double y_meters)
     {
@@ -91,33 +95,41 @@ public class RobotContainer {
         startingPose = poseEstimator.getCurrentPose();
 
         m_chooser.setDefaultOption("None", new InstantCommand());
+
+        m_chooser.addOption("Eject Cube", EjectCubeSequence);
         
-        m_chooser.addOption("Center: Charge Only",
-                GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0)
+        m_chooser.addOption("Center: Charge",
+                EjectCubeSequence
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
         
-        m_chooser.addOption("Center: Drive Out then Charge",
-                GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0)
+        m_chooser.addOption("Center: Drive Out + Charge",
+                EjectCubeSequence
+                .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 // Split move into two to avoid doing it too fast
                 .andThen(GoToInches(center_DriverOverRamp_inches / 2, 0.0))
                 .andThen(GoToInches(center_DriverOverRamp_inches, 0.0))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
-        m_chooser.addOption("Left: Driveout",
-                GoToInches(side_DrivePastRamp, 0));
+        m_chooser.addOption("Left: Drive Out",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0)));
 
-        m_chooser.addOption("Left: Driveout + Charge",
-                GoToInches(side_DrivePastRamp, 0)
+        m_chooser.addOption("Left: Drive Out + Charge",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0))
                 .andThen(GoToInches(side_DrivePastRamp, left_StrafeToRamp))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, left_StrafeToRamp))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
-        m_chooser.addOption("Right: Driveout",
-                GoToInches(side_DrivePastRamp, 0));
+        m_chooser.addOption("Right: Drive Out",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0)));
 
-        m_chooser.addOption("Right: Driveout + Charge",
-                GoToInches(side_DrivePastRamp, 0)
+        m_chooser.addOption("Right: Drive Out + Charge",
+                EjectCubeSequence
+                .andThen(GoToInches(side_DrivePastRamp, 0))
                 .andThen(GoToInches(side_DrivePastRamp, right_StrafeToRamp))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, right_StrafeToRamp))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
@@ -181,16 +193,6 @@ public class RobotContainer {
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
-
-        // Temporary commands to ensure that all commands and subsystems are able to compile
-        // new JoystickButton(m_controller, 9)
-        //     .whileTrue(new Arm_Move(1000, m_arm));
-
-        // new JoystickButton(m_controller, 10)
-        //     .whileTrue(new Wrist_Move(90, m_wrist));
-
-        // new JoystickButton(m_controller, 11)
-        //     .whileTrue(new Hand_Grip(90, m_hand));
 
     }
 
