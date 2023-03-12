@@ -141,11 +141,10 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        //https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
+        // https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
 
-        // TODO: Do we have a subsystem this should require?
         new JoystickButton(m_controller, 3)
-            .onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope));
+            .onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope, m_drivetrainSubsystem));
 
         new JoystickButton(m_controller, 4)
             .onTrue(new PrintPositionCommand(poseEstimator));
