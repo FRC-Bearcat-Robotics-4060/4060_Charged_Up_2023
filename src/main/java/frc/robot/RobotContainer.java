@@ -55,7 +55,12 @@ public class RobotContainer {
 
     DriveToPoseCommand GoToInches(double x, double y)
     {
-        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y));
+        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y), false);
+    }
+
+    DriveToPoseCommand GoToInches_ExitOnRoll(double x, double y)
+    {
+        return new DriveToPoseCommand(m_drivetrainSubsystem, poseEstimator, translate_pose_inches(startingPose, x, y), true);
     }
 
     /**
@@ -86,11 +91,28 @@ public class RobotContainer {
         m_chooser.addOption("Center: Back Up + Driveout",
                 GoToInches(-14, 0)
                 .andThen(GoToInches(135, 0)));
+        
+        m_chooser.addOption("Center: Balance Only",
+            GoToInches_ExitOnRoll(60.0, 0.0)
+        .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
+        
+        m_chooser.addOption("Center: Drive Out then Balance",
+                GoToInches_ExitOnRoll(60.0, 0.0)
+                .andThen(GoToInches(100.0, 0.0))
+                .andThen(GoToInches(200.0, 0.0))
+                .andThen(GoToInches_ExitOnRoll(60.0, 0.0))
+                .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
         m_chooser.addOption("Center: Back Up + Driveout + Charge",
                 GoToInches(-14, 0)
                 .andThen(GoToInches(135, 0))
                 .andThen(GoToInches(75, 0)));
+
+        m_chooser.addOption("Left: Driveout + Charge",
+                GoToInches(180, 0)
+                .andThen(GoToInches(180, -70))
+                .andThen(GoToInches_ExitOnRoll(100, -70))
+                .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
         m_chooser.addOption("Left: Back Up + Driveout + Charge",
                 GoToInches(-14, 0)
@@ -158,6 +180,7 @@ public class RobotContainer {
         // new JoystickButton(m_controller, 11).onTrue(GoToInches(48, 48));
         // new JoystickButton(m_controller, 12).onTrue(GoToInches(24, 48));
 
+        new JoystickButton(m_controller, 2).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem));
         new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
 
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
