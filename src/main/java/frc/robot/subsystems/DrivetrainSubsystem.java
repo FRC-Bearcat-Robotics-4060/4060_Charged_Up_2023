@@ -213,9 +213,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public void drive_x_mps(double x_meters_per_second){
         SmartDashboard.putNumber("autoBalance.x_velocity", x_meters_per_second);
 
+        double sign = x_meters_per_second >= 0.0 ? 1.0 : -1.0;
+
         double clamped = x_meters_per_second;
         if (clamped != 0) {
-            clamped = MathUtil.clamp(x_meters_per_second, 0.015, 0.75);
+            clamped = sign * MathUtil.clamp(Math.abs(x_meters_per_second), 0.015, 0.75);
         }
 
         drive(ChassisSpeeds.fromFieldRelativeSpeeds(
