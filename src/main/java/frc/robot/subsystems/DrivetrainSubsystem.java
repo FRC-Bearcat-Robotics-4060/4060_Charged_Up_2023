@@ -10,6 +10,7 @@ import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -202,7 +204,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public float getRoll() {
-        return m_navx.getRoll();
+        float RollAngleDegrees = m_navx.getRoll();
+        SmartDashboard.putNumber("autoBalance.Roll", RollAngleDegrees);
+        return -RollAngleDegrees;
+    }
+
+    // Used to drive in a field-oriented X direction, as part of an auto-balance routine.
+    public void drive_x_mps(double x_meters_per_second){
+        SmartDashboard.putNumber("autoBalance.x_velocity", x_meters_per_second);
+
+        double sign = x_meters_per_second >= 0.0 ? 1.0 : -1.0;
+
+        double clamped = x_meters_per_second;
+        if (clamped != 0) {
+            clamped = sign * MathUtil.clamp(Math.abs(x_meters_per_second), 0.01, 0.75);
+        }
+
+        drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+            clamped, 0.0,
+            0.0, getGyroscopeRotation()));
     }
 
     public SwerveModulePosition[] getModulePositions() {
