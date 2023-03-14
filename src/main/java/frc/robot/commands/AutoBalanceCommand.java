@@ -9,9 +9,10 @@ public class AutoBalanceCommand extends PIDCommand {
     private int m_onBalanceCount = 0;
 
     public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem) {
-        super(new PIDController(-0.05, 0.0, 0.0), drivetrainSubsystem::getRoll, 0.0,
+        super(new PIDController(0.033, 0.001 , 0.0015 ), drivetrainSubsystem::getRoll, 0.0,
                 output -> drivetrainSubsystem.drive_x_mps(output));
-        getController().setTolerance(m_onBalanceThreshold);
+        getController().setTolerance(m_onBalanceThreshold); 
+        getController().setIntegratorRange(-0.2, 0.2);
         addRequirements(drivetrainSubsystem);
     }   
 
