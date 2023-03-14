@@ -43,30 +43,30 @@ public final class Constants {
 
     // public static final int DRIVETRAIN_PIGEON_ID = 0; // Set Pigeon ID
 
-    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
-    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
-    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 11;
-    // public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(228.95);
-
-    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 6;
-    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 2;
-    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 10;
-    // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(197.3);
-
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
-    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 7;
-    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 13;
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
+    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 5;
+    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11;
     // public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(259.6);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(139.0);
+
+    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 6;
+    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
+    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 10;
+    // public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(106.35);
+
+    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 4;
+    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 7;
+    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 13;
+    // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(164.7);
 
     // This motor is probably not Loctited...but we can't get the magnet out.
-    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 8;
-    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 3;
-    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 12;
-    // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(105.64);
+    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8;
+    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 3;
+    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 12;
+    // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(15.9);
     
     public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
         // Front left
