@@ -43,12 +43,12 @@ public class RobotContainer {
     private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(m_drivetrainSubsystem);
 
     private final CubeFlipperSubsystem m_cubeFlipperSubsystem = new CubeFlipperSubsystem();
-    private CommandBase EjectCubeCommand = Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem);
-    private CommandBase ParkCubeFlipperCommand = Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem);
-    private CommandBase EjectCubeSequence =
-        EjectCubeCommand
-        .andThen(Commands.waitSeconds(Constants.CUBE_FLIPPER_EJECT_DELAY_S))
-        .andThen(ParkCubeFlipperCommand);
+    
+    private CommandBase EjectCubeCommand() {
+        return Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem)
+            .andThen(Commands.waitSeconds(Constants.CUBE_FLIPPER_EJECT_DELAY_S))
+            .andThen(Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem));
+    }
 
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -96,15 +96,15 @@ public class RobotContainer {
 
         m_chooser.setDefaultOption("None", new InstantCommand());
 
-        m_chooser.addOption("Eject Cube", EjectCubeSequence);
+        m_chooser.addOption("Eject Cube", EjectCubeCommand());
         
         m_chooser.addOption("Center: Charge",
-                EjectCubeSequence
+                EjectCubeCommand()
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
         
         m_chooser.addOption("Center: Drive Out + Charge",
-                EjectCubeSequence
+                EjectCubeCommand()
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 // Split move into two to avoid doing it too fast
                 .andThen(GoToInches(center_DriverOverRamp_inches / 2, 0.0))
@@ -113,22 +113,22 @@ public class RobotContainer {
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
         m_chooser.addOption("Left: Drive Out",
-                EjectCubeSequence
+                EjectCubeCommand()
                 .andThen(GoToInches(side_DrivePastRamp, 0)));
 
         m_chooser.addOption("Left: Drive Out + Charge",
-                EjectCubeSequence
+                EjectCubeCommand()
                 .andThen(GoToInches(side_DrivePastRamp, 0))
                 .andThen(GoToInches(side_DrivePastRamp, left_StrafeToRamp))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, left_StrafeToRamp))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
 
         m_chooser.addOption("Right: Drive Out",
-                EjectCubeSequence
+                EjectCubeCommand()
                 .andThen(GoToInches(side_DrivePastRamp, 0)));
 
         m_chooser.addOption("Right: Drive Out + Charge",
-                EjectCubeSequence
+                EjectCubeCommand()
                 .andThen(GoToInches(side_DrivePastRamp, 0))
                 .andThen(GoToInches(side_DrivePastRamp, right_StrafeToRamp))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, right_StrafeToRamp))
