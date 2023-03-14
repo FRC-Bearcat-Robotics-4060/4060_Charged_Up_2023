@@ -206,7 +206,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public float getRoll() {
         float RollAngleDegrees = m_navx.getRoll();
         SmartDashboard.putNumber("autoBalance.Roll", RollAngleDegrees);
-        return RollAngleDegrees;
+        return -RollAngleDegrees;
     }
 
     // Used to drive in a field-oriented X direction, as part of an auto-balance routine.
@@ -217,7 +217,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         double clamped = x_meters_per_second;
         if (clamped != 0) {
-            clamped = sign * MathUtil.clamp(Math.abs(x_meters_per_second), 0.015, 0.75);
+            clamped = sign * MathUtil.clamp(Math.abs(x_meters_per_second), 0.01, 0.75);
         }
 
         drive(ChassisSpeeds.fromFieldRelativeSpeeds(
