@@ -190,6 +190,9 @@ public class RobotContainer {
         new JoystickButton(m_controller, 2).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem));
         new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
 
+        new JoystickButton(m_controller, 6).onTrue(Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem));
+        new JoystickButton(m_controller, 4).onTrue(Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem));
+
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
