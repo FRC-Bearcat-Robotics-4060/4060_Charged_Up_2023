@@ -16,8 +16,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
  */
 public class DriveToPoseCommand extends CommandBase {
   
-  private static final double TRANSLATION_TOLERANCE = Units.inchesToMeters(1.0);
-  private static final double THETA_TOLERANCE = Units.degreesToRadians(2.0);
+  private static final double TRANSLATION_TOLERANCE = Units.inchesToMeters(6.0);
+  private static final double THETA_TOLERANCE = Units.degreesToRadians(5.0);
 
   private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
   private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
