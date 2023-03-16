@@ -44,6 +44,8 @@ public class RobotContainer {
 
     private final CubeFlipperSubsystem m_cubeFlipperSubsystem = new CubeFlipperSubsystem();
     
+    private final WristSubsystem m_wristSubsystem = new WristSubsystem();
+
     private CommandBase EjectCubeCommand() {
         return Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem)
             .andThen(Commands.waitSeconds(Constants.CUBE_FLIPPER_EJECT_DELAY_S))
@@ -197,6 +199,16 @@ public class RobotContainer {
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
 
+        new JoystickButton(m_controller, 11).onTrue(Commands.runOnce(m_wristSubsystem::park, m_wristSubsystem));
+        // button 7 to deploy
+        new JoystickButton(m_controller, 7).onTrue(Commands.runOnce(m_wristSubsystem::deploy, m_wristSubsystem));
+        // button 12 to level1
+        new JoystickButton(m_controller, 12).onTrue(Commands.runOnce(m_wristSubsystem::level1, m_wristSubsystem));
+        // 10 to level2
+        new JoystickButton(m_controller, 10).onTrue(Commands.runOnce(m_wristSubsystem::level2, m_wristSubsystem));
+        // 8 to level3
+        new JoystickButton(m_controller, 8).onTrue(Commands.runOnce(m_wristSubsystem::level3, m_wristSubsystem));
+        
     }
 
     /**
