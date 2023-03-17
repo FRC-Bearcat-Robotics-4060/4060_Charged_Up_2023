@@ -29,6 +29,10 @@ public final class Constants {
     public static final double CUBE_FLIPPER_EJECT_DELAY_S = 2.0;
 
     public static final int WRIST_MOTOR_CAN_ID = 14;
+    public static final int ROLLER_MOTOR_CAN_ID = 15;
+
+    public static final double ROLLER_IN_SPEED = 0.25;
+    public static final double ROLLER_OUT_SPEED = -0.25;
 
     public static final float WRIST_PARK_POS = 0.0f;
     public static final float WRIST_LEVEL1_POS = 20.0f;
