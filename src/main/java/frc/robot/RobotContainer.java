@@ -30,11 +30,11 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
-    private static final double center_DriverOverRamp_inches = 200.0;
-    private static final double center_DriveToRamp_inches = 60.0;
+    private static final double center_DriverOverRamp_inches = 220.0;
+    private static final double center_DriveToRamp_inches = 80.0;
     private static final double left_StrafeToRamp = -70.0;
     private static final double right_StrafeToRamp = -left_StrafeToRamp;
-    private static final double side_DrivePastRamp = 180.00;
+    private static final double side_DrivePastRamp = 200.00;
 
     // The robot's subsystems and commands are defined here...
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
@@ -109,7 +109,7 @@ public class RobotContainer {
                 EjectCubeCommand()
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 // Split move into two to avoid doing it too fast
-                .andThen(GoToInches(center_DriverOverRamp_inches / 2, 0.0))
+                // .andThen(GoToInches(center_DriverOverRamp_inches * 0.65, 0.0))
                 .andThen(GoToInches(center_DriverOverRamp_inches, 0.0))
                 .andThen(GoToInches_ExitOnRoll(center_DriveToRamp_inches, 0.0))
                 .andThen(new AutoBalanceCommand(m_drivetrainSubsystem)));
