@@ -28,7 +28,7 @@ public class WristSubsystem extends SubsystemBase {
 
         wristMotor.restoreFactoryDefaults();
         wristMotor.setInverted(false);
-        wristMotor.setSmartCurrentLimit(10);
+        wristMotor.setSmartCurrentLimit(18);
         wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         // wristMotor.setOpenLoopRampRate(1.0);
         // wristMotor.setClosedLoopRampRate(1.0);

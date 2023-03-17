@@ -45,8 +45,8 @@ public final class Constants {
     public static final float WRIST_LEVEL3_POS = 20.0f;
     public static final float WRIST_DEPLOY_POS = 150.0f;
 
-    public static final double WRIST_P = 0.02;
-    public static final double WRIST_I = 0.00001;
+    public static final double WRIST_P = 0.035;
+    public static final double WRIST_I = 0.00006;
     public static final double WRIST_D = 0.01;
 
     /**
