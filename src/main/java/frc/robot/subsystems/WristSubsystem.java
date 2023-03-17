@@ -11,6 +11,8 @@ import frc.robot.Constants;
 
 public class WristSubsystem extends SubsystemBase {
     private CANSparkMax wristMotor = new CANSparkMax(Constants.WRIST_MOTOR_CAN_ID, CANSparkMax.MotorType.kBrushed);
+    private CANSparkMax rollerMotor = new CANSparkMax(Constants.ROLLER_MOTOR_CAN_ID, CANSparkMax.MotorType.kBrushed);
+
     private RelativeEncoder wristEncoder;
     private SparkMaxPIDController wristPIDController;
  
@@ -41,12 +43,36 @@ public class WristSubsystem extends SubsystemBase {
 
         // Set encoder position to zero. Might be needed if we reboot.
         wristEncoder.setPosition(0.0);
+
+        rollerMotor.restoreFactoryDefaults();
+        rollerMotor.setInverted(false);
+        rollerMotor.setSmartCurrentLimit(10);
+        rollerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     }
 
     public void zeroPosition() {
         wristEncoder.setPosition(0.0);
     }
 
+    public void runRollerIn(double speed) {
+        rollerMotor.set(speed);
+    }
+
+    public void runRollerOut(double speed) {
+        rollerMotor.set(-speed);
+    }
+
+    public void feedIn() {
+        rollerMotor.set(Constants.ROLLER_IN_SPEED);
+    }
+
+    public void feedOut() {
+        rollerMotor.set(Constants.ROLLER_OUT_SPEED);
+    }
+
+    public void stopRoller() {
+        rollerMotor.set(0.0);
+    }
 
     public void setWristPosition(double position) {
         wristPIDController.setReference(position, ControlType.kPosition);
