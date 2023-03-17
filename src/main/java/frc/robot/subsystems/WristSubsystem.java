@@ -6,6 +6,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,6 +16,12 @@ public class WristSubsystem extends SubsystemBase {
 
     private RelativeEncoder wristEncoder;
     private SparkMaxPIDController wristPIDController;
+
+    private double roller_speed_deployed() { return SmartDashboard.getNumber("roller_speed_deployed", Constants.ROLLER_SPEED_DEPLOYED); }
+    private double roller_speed_level1() { return SmartDashboard.getNumber("roller_speed_level1", Constants.ROLLER_SPEED_LEVEL1); }
+    private double roller_speed_level2() { return SmartDashboard.getNumber("roller_speed_level2", Constants.ROLLER_SPEED_LEVEL2); }
+    private double roller_speed_level3() { return SmartDashboard.getNumber("roller_speed_level3", Constants.ROLLER_SPEED_LEVEL3); }
+    private double roller_speed_current = roller_speed_deployed();  
  
     // add abstract methods
     public WristSubsystem() {
@@ -46,7 +53,7 @@ public class WristSubsystem extends SubsystemBase {
 
         rollerMotor.restoreFactoryDefaults();
         rollerMotor.setInverted(false);
-        rollerMotor.setSmartCurrentLimit(10);
+        rollerMotor.setSmartCurrentLimit(20);
         rollerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     }
 
@@ -63,11 +70,11 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public void feedIn() {
-        rollerMotor.set(Constants.ROLLER_IN_SPEED);
+        rollerMotor.set(-roller_speed_current);
     }
 
     public void feedOut() {
-        rollerMotor.set(Constants.ROLLER_OUT_SPEED);
+        rollerMotor.set(roller_speed_current);
     }
 
     public void stopRoller() {
@@ -81,23 +88,28 @@ public class WristSubsystem extends SubsystemBase {
     // Add function that sets wrist position to 150 degrees
     public void deploy() {
         setWristPosition(Constants.WRIST_DEPLOY_POS);
+        roller_speed_current = roller_speed_deployed();
     }
 
     // Add function called park that sets wrist position to 10 degrees
     public void park() {
         setWristPosition(Constants.WRIST_PARK_POS);
+        roller_speed_current = roller_speed_deployed();
     }
 
     public void level1() {
         setWristPosition(Constants.WRIST_LEVEL1_POS);
+        roller_speed_current = roller_speed_level1();
     }
 
     public void level2() {
         setWristPosition(Constants.WRIST_LEVEL2_POS);
+        roller_speed_current = roller_speed_level2();
     }
 
     public void level3() {
         setWristPosition(Constants.WRIST_LEVEL3_POS);
+        roller_speed_current = roller_speed_level3();
     }
 
 }
