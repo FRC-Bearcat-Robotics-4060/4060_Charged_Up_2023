@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import java.lang.Thread;
 
 import static frc.robot.Constants.*;
 import java.util.Arrays;
@@ -104,6 +105,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public DrivetrainSubsystem() {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+
+        // Add a slight delay to make sure that all NEOs are up before we try to configure them.
+        try{
+            Thread.sleep(5000);
+        }
+        catch (Exception e)
+        {}
 
         // There are 4 methods you can call to create your swerve modules.
         // The method you use depends on what motors you are using.
