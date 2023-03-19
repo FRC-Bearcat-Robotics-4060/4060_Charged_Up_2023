@@ -64,9 +64,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
      */
     // Here we calculate the theoretical maximum angular velocity. You can also replace this
     // with a measured amount.
+    // public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND =
+    //         MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+    //                 DRIVETRAIN_WHEELBASE_METERS / 2.0);
+
+    public static final double MAX_ROTATIONS_PER_SECOND = 3.0;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND =
-            MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                    DRIVETRAIN_WHEELBASE_METERS / 2.0) / 2.0;
+            MAX_ROTATIONS_PER_SECOND * 2.0 * Math.PI;
 
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
             // Front left
