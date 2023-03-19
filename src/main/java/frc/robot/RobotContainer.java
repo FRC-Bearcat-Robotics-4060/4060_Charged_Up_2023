@@ -153,11 +153,11 @@ public class RobotContainer {
 
         // https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html
 
-        new JoystickButton(m_controller, 3)
+        new JoystickButton(m_controller, 6)
             .onTrue(Commands.runOnce(m_drivetrainSubsystem::zeroGyroscope, m_drivetrainSubsystem));
 
-        new JoystickButton(m_controller, 4)
-            .onTrue(new PrintPositionCommand(poseEstimator));
+        // new JoystickButton(m_controller, 4)
+        //     .onTrue(new PrintPositionCommand(poseEstimator));
 
         // Borrowed from https://github.com/STMARobotics/frc-7028-2023/blob/main/src/main/java/frc/robot/RobotContainer.java
         // Drive to cone node to the left of tag 1, then just shoot
@@ -189,29 +189,37 @@ public class RobotContainer {
         // new JoystickButton(m_controller, 11).onTrue(GoToInches(48, 48));
         // new JoystickButton(m_controller, 12).onTrue(GoToInches(24, 48));
 
-        new JoystickButton(m_controller, 2).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem));
-        new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
+        new JoystickButton(m_controller, 9).whileTrue(new AutoBalanceCommand(m_drivetrainSubsystem));
+        // new JoystickButton(m_controller, 5).whileTrue(new AlignToCubeChannelCommand(m_drivetrainSubsystem, poseEstimator));
 
-        new JoystickButton(m_controller, 6).onTrue(Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem));
-        new JoystickButton(m_controller, 4).onTrue(Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem));
+        // new JoystickButton(m_controller, 6).onTrue(Commands.runOnce(m_cubeFlipperSubsystem::eject, m_cubeFlipperSubsystem));
+        // new JoystickButton(m_controller, 4).onTrue(Commands.runOnce(m_cubeFlipperSubsystem::park, m_cubeFlipperSubsystem));
 
         // controller.rightTrigger().whileTrue(new DriveToPoseCommand(
         //     drivetrainSubsystem, poseEstimator::getCurrentPose, new Pose2d(14.59, 1.67, Rotation2d.fromDegrees(0.0)))
         //         .andThen(new JustShootCommand(0.4064, 1.05, 34.5, elevatorSubsystem, wristSubsystem, shooterSubsystem)));
 
         new JoystickButton(m_controller, 11).onTrue(Commands.runOnce(m_wristSubsystem::park, m_wristSubsystem));
-        // button 7 to deploy
-        new JoystickButton(m_controller, 7).onTrue(Commands.runOnce(m_wristSubsystem::deploy, m_wristSubsystem));
-        // button 12 to level1
+        new JoystickButton(m_controller, 9).onTrue(Commands.runOnce(m_wristSubsystem::deploy, m_wristSubsystem));
         new JoystickButton(m_controller, 12).onTrue(Commands.runOnce(m_wristSubsystem::level1, m_wristSubsystem));
-        // 10 to level2
         new JoystickButton(m_controller, 10).onTrue(Commands.runOnce(m_wristSubsystem::level2, m_wristSubsystem));
-        // 8 to level3
         new JoystickButton(m_controller, 8).onTrue(Commands.runOnce(m_wristSubsystem::level3, m_wristSubsystem));
         
+        // Map buttons to feed balls in and out
+        new JoystickButton(m_controller, 3).whileTrue(Commands.runEnd(m_wristSubsystem::feedIn, m_wristSubsystem::stopRoller, m_wristSubsystem));
+        new JoystickButton(m_controller, 5).whileTrue(Commands.runEnd(m_wristSubsystem::feedOut, m_wristSubsystem::stopRoller, m_wristSubsystem));
+        
+        new JoystickButton(m_controller, 1).whileTrue(new GatherCommand(m_wristSubsystem));
+        new JoystickButton(m_controller, 7)
+            .onTrue(Commands.runOnce(m_wristSubsystem::deploy, m_wristSubsystem)
+                .andThen(Commands.waitSeconds(1.75))
+                .andThen(Commands.runOnce(m_wristSubsystem::feedOut, m_wristSubsystem))
+                .andThen(Commands.waitSeconds(1.0))
+                .andThen(Commands.runOnce(m_wristSubsystem::stopRoller, m_wristSubsystem))
+                .andThen(Commands.runOnce(m_wristSubsystem::park, m_wristSubsystem)));
     }
 
-    /**
+    /**s
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
@@ -244,10 +252,10 @@ public class RobotContainer {
 
     private static double modifyTwistAxis(double value) {
         // Deadband
-        value = deadband(value, 0.2);
+        value = deadband(value, 0.25);
 
         // Square the axis
-        value = Math.copySign(value * value * value * value, value);
+        value = Math.copySign(value * value * value, value);
 
         return value;
     }
