@@ -32,9 +32,9 @@ public class DefaultDriveCommand extends CommandBase {
 
         addRequirements(drivetrainSubsystem);
 
-        RateLimiter_X = new SlewRateLimiter(Constants.DRIVE_TRANSLATION_RAMP_TIME * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND);
-        RateLimiter_Y = new SlewRateLimiter(Constants.DRIVE_TRANSLATION_RAMP_TIME * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND);
-        RateLimiter_R = new SlewRateLimiter(Constants.DRIVE_ROTATION_RAMP_TIME * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND);
+        RateLimiter_X = new SlewRateLimiter(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND / Constants.DRIVE_TRANSLATION_RAMP_TIME);
+        RateLimiter_Y = new SlewRateLimiter(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND / Constants.DRIVE_TRANSLATION_RAMP_TIME);
+        RateLimiter_R = new SlewRateLimiter(DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / Constants.DRIVE_ROTATION_RAMP_TIME);
     }
 
     @Override

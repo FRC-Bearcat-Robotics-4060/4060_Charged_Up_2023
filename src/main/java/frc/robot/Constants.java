@@ -62,8 +62,8 @@ public final class Constants {
      */
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.473075;
 
-    public static final double DRIVE_TRANSLATION_RAMP_TIME = 3;
-    public static final double DRIVE_ROTATION_RAMP_TIME = 3;
+    public static final double DRIVE_TRANSLATION_RAMP_TIME = 1.0 / 3.0;
+    public static final double DRIVE_ROTATION_RAMP_TIME = 1.0 / 5.0;
     
     // public static final int DRIVETRAIN_PIGEON_ID = 0; // Set Pigeon ID
 
