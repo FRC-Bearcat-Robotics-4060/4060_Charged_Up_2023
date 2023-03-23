@@ -52,7 +52,7 @@ public class WristSubsystem extends SubsystemBase {
         wristEncoder.setPosition(0.0);
 
         rollerMotor.restoreFactoryDefaults();
-        rollerMotor.setInverted(false);
+        rollerMotor.setInverted(true);
         rollerMotor.setSmartCurrentLimit(30);
         rollerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     }
